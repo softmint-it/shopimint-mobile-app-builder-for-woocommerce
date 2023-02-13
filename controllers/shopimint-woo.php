@@ -1904,7 +1904,9 @@ class ShopimintWoo extends ShopimintBaseController
         $androiddeeplink = $request['shopimint_android_deeplink'];
         $bgcolor = $request['smartbanner_bgcolor'];
         $textcolor = $request['smartbanner_textcolor'];
+        $appid = $request['shopimint_appid'];
         
+        update_option("shopimint_appid", $appid);
         update_option("shopimint_smartbanner_enabled", $enabled);
         update_option("shopimint_appname", $appname);
         update_option("shopimint_appdescription", $description);

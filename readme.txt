@@ -1,5 +1,6 @@
 === Shopimint WooCommerce Mobile App Builder ===
 Contributors:      shopimint
+Version:           1.0.0
 Tags:              shopimint, mobile app builder, create app , app creator ,shopimint app, softmint, appbuilder, ios, android, woocommerce mobile app
 Description:       Turn your woocommerce website into a fully functional elegant mobile app without any coding skills using shopimint drag and drop mobile app builder
 Requires at least: 4.6

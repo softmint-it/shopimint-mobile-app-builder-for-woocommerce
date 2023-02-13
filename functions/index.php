@@ -119,8 +119,8 @@ function sendNotification($deviceToken , $props, $automationtype) {
 
     $appid = get_option("shopimint_appid");
 
-    $deviceToken = 'eNwyOfRuoEthjDagSQ0-o6:APA91bH0mGtRae0nXfaARizPpaULopTLgjzXAZHV2OrOoJaQSiZIY_mgxvPqdR_jH9HECzHG-L3dNUHDqMmU1BiV4kAyOzKuupBvi4ssaMb76uEZwn4unvRgpIHAO3-mZFXQC5-SFlRn';
-    $appid = '311aeb3e-12bf-c2a4-7f00-5bc491af3683';
+    // $deviceToken = 'eNwyOfRuoEthjDagSQ0-o6:APA91bH0mGtRae0nXfaARizPpaULopTLgjzXAZHV2OrOoJaQSiZIY_mgxvPqdR_jH9HECzHG-L3dNUHDqMmU1BiV4kAyOzKuupBvi4ssaMb76uEZwn4unvRgpIHAO3-mZFXQC5-SFlRn';
+    // $appid = '311aeb3e-12bf-c2a4-7f00-5bc491af3683';
 
     if(isset($deviceToken) && $deviceToken != false && $deviceToken != '') {
 
@@ -428,6 +428,7 @@ function shopimint_generateCookieByUserId($user_id, $seconds = 1209600){
 }
 
 function shopimint_validateCookieLogin($cookie){
+    
     if(isset($cookie) && strlen($cookie) > 0){
         $userId = wp_validate_auth_cookie($cookie, 'logged_in');
         if($userId == false){

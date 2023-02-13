@@ -21,40 +21,10 @@ class ShopimintUserController extends ShopimintBaseController
             ),
         ));
 
-        register_rest_route($this->namespace, '/notification', array(
-            array(
-                'methods' => 'POST',
-                'callback' => array($this, 'chat_notification'),
-                'permission_callback' => function () {
-                    return parent::checkApiPermission();
-                }
-            ),
-        ));
-
         register_rest_route($this->namespace, '/sign_up', array(
             array(
                 'methods' => 'POST',
                 'callback' => array($this, 'register'), 
-                'permission_callback' => function () {
-                    return parent::checkApiPermission();
-                }
-            ),
-        ));
-
-        register_rest_route($this->namespace, '/sign_up_2', array(
-            array(
-                'methods' => 'POST',
-                'callback' => array($this, 'register_2'),
-                'permission_callback' => function () {
-                    return parent::checkApiPermission();
-                }
-            ),
-        ));
-
-        register_rest_route($this->namespace, '/register', array(
-            array(
-                'methods' => 'POST',
-                'callback' => array($this, 'register'),
                 'permission_callback' => function () {
                     return parent::checkApiPermission();
                 }
@@ -91,36 +61,6 @@ class ShopimintUserController extends ShopimintBaseController
             ),
         ));
 
-        register_rest_route($this->namespace, '/sms_login', array(
-            array(
-                'methods' => 'GET',
-                'callback' => array($this, 'sms_login'),
-                'permission_callback' => function () {
-                    return parent::checkApiPermission();
-                }
-            ),
-        ));
-
-        register_rest_route($this->namespace, '/firebase_sms_login', array(
-            array(
-                'methods' => 'GET',
-                'callback' => array($this, 'firebase_sms_login'),
-                'permission_callback' => function () {
-                    return parent::checkApiPermission();
-                }
-            ),
-        ));
-
-        register_rest_route($this->namespace, '/firebase_sms_login_v2', array(
-            array(
-                'methods' => 'GET',
-                'callback' => array($this, 'firebase_sms_login_v2'),
-                'permission_callback' => function () {
-                    return parent::checkApiPermission();
-                }
-            ),
-        ));
-
         register_rest_route($this->namespace, '/apple_login', array(
             array(
                 'methods' => 'POST',
@@ -135,16 +75,6 @@ class ShopimintUserController extends ShopimintBaseController
             array(
                 'methods' => 'GET',
                 'callback' => array($this, 'google_login'),
-                'permission_callback' => function () {
-                    return parent::checkApiPermission();
-                }
-            ),
-        ));
-
-        register_rest_route($this->namespace, '/post_comment', array(
-            array(
-                'methods' => 'GET',
-                'callback' => array($this, 'post_comment'),
                 'permission_callback' => function () {
                     return parent::checkApiPermission();
                 }
@@ -181,16 +111,6 @@ class ShopimintUserController extends ShopimintBaseController
             ),
         ));
 
-        register_rest_route($this->namespace, '/checkout', array(
-            array(
-                'methods' => 'POST',
-                'callback' => array($this, 'prepare_checkout'),
-                'permission_callback' => function () {
-                    return parent::checkApiPermission();
-                }
-            ),
-        ));
-
         register_rest_route($this->namespace, '/get_currency_rates', array(
             array(
                 'methods' => 'GET',
@@ -221,56 +141,6 @@ class ShopimintUserController extends ShopimintBaseController
             ),
         ));
 
-        register_rest_route($this->namespace, '/check-user', array(
-            array(
-                'methods' => 'GET',
-                'callback' => array($this, 'check_user'),
-                'permission_callback' => function () {
-                    return parent::checkApiPermission();
-                }
-            ),
-        ));
-
-        register_rest_route($this->namespace, '/digits/register/check', array(
-            array(
-                'methods' => 'POST',
-                'callback' => array($this, 'digits_register_check'),
-                'permission_callback' => function () {
-                    return parent::checkApiPermission();
-                }
-            ),
-        ));
-
-        register_rest_route($this->namespace, '/digits/register', array(
-            array(
-                'methods' => 'POST',
-                'callback' => array($this, 'digits_register'),
-                'permission_callback' => function () {
-                    return parent::checkApiPermission();
-                }
-            ),
-        ));
-
-        register_rest_route($this->namespace, '/digits/login/check', array(
-            array(
-                'methods' => 'POST',
-                'callback' => array($this, 'digits_login_check'),
-                'permission_callback' => function () {
-                    return parent::checkApiPermission();
-                }
-            ),
-        ));
-        
-        register_rest_route($this->namespace, '/digits/login', array(
-            array(
-                'methods' => 'POST',
-                'callback' => array($this, 'digits_login'),
-                'permission_callback' => function () {
-                    return parent::checkApiPermission();
-                }
-            ),
-        ));
-
         register_rest_route($this->namespace, '/delete_account', array(
             array(
                 'methods' => 'POST',
@@ -281,34 +151,6 @@ class ShopimintUserController extends ShopimintBaseController
             ),
         ));
     }
-
-
-    public function check_user($request)
-    {
-        $phone = $request['phone'];
-        $username = $request['username'];
-        if (isset($phone)) {
-            $args = array('meta_key' => 'registered_phone_number', 'meta_value' => $phone);
-            $search_users = get_users($args);
-            if (empty($search_users)) {
-                return false;
-            }
-        }
-        if (isset($username)) {
-            if (strpos($username, '@')) {
-                $user_data = get_user_by('email', trim(wp_unslash($username)));
-            } else {
-                $login = trim($username);
-                $user_data = get_user_by('login', $login);
-            }
-            if (empty($user_data)) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
 
     public function reset_password()
     {
@@ -479,132 +321,28 @@ class ShopimintUserController extends ShopimintBaseController
         );
     }
 
-
-    public function register_2()
-    {
-        $json = file_get_contents('php://input');
-        $params = json_decode($json, TRUE);
-        $usernameReq = $params["username"];
-        $emailReq = $params["email"];
-        $role = $params["role"];
-        $dokan_enable_selling  = $params['dokan_enable_selling'];
-        $wcfm_membership_application_status = $params['wcfm_membership_application_status'];
-        if (isset($role)) {
-            if (!in_array($role, ['subscriber', 'wcfm_vendor', 'seller', 'wcfm_delivery_boy', 'driver','owner'], true)) {
-                return parent::sendError("invalid_role", "Role is invalid.", 400);
-            }
-        }
-        $userPassReq = $params["user_pass"];
-        $userLoginReq = $params["user_login"];
-        $userEmailReq = $params["user_email"];
-        $username = sanitize_user($usernameReq);
-
-        if ($username == $userEmailReq && $username == $userLoginReq) {
-            $is_email = is_email($username);
-            if ($is_email) {
-                $email = $username;
-                $user_name = explode("@", $email)[0];
-                $params["user_email"] = $email;
-                $params["user_login"] = $user_name;
-            } else {
-                $user_name = $username;
-                $params["user_login"] = $user_name;
-                $params["user_email"] = '';
-            }
-
-            if (!validate_username($user_name)) {
-                return parent::sendError("invalid_username", "Username is invalid.", 400);
-            }
-            if (username_exists($user_name)) {
-                return parent::sendError("existed_username", "Username already exists.", 400);
-            }
-            if (isset($email)) {
-                if (!is_email($email)) {
-                    return parent::sendError("invalid_email", "E-mail address is invalid.", 400);
-                }
-
-                if (email_exists($email)) {
-                    return parent::sendError("existed_email", "E-mail address is already in use.", 400);
-                }
-            }
-            if (!$userPassReq) {
-                $params["user_pass"] = wp_generate_password();
-            }
-        }
-
-        if (isset($params["seconds"])) {
-            $seconds = (int)$params["seconds"];
-        } else {
-            $seconds = 1209600;
-        }
-        $allowed_params = array('user_login', 'user_email', 'user_pass', 'display_name', 'user_nicename', 'user_url', 'nickname', 'first_name',
-            'last_name', 'description', 'rich_editing', 'user_registered', 'role', 'jabber', 'aim', 'yim',
-            'comment_shortcuts', 'admin_color', 'use_ssl', 'show_admin_bar_front',
-        );
-
-
-        $dataRequest = $params;
-        foreach ($dataRequest as $field => $value) {
-            if (in_array($field, $allowed_params)) {
-                $user[$field] = trim(sanitize_text_field($value));
-            }
-        }
-
-        $user['role'] = isset($params["role"]) ? sanitize_text_field($params["role"]) : get_option('default_role');
-        $user_id = wp_insert_user($user);
-
-        if (is_wp_error($user_id)) {
-            return parent::sendError($user_id->get_error_code(), $user_id->get_error_message(), 400);
-        } elseif (isset($params["phone"])) {
-            update_user_meta($user_id, 'billing_phone', $params["phone"]);
-            update_user_meta($user_id, 'registered_phone_number', $params["phone"]);
-            wp_new_user_notification($user_id, '', '');
-        }
-
-        if(isset( $wcfm_membership_application_status) &&  $wcfm_membership_application_status == 'pending'){
-            update_user_meta($user_id,'wcfm_membership_application_status',$wcfm_membership_application_status);
-        }
-
-        if(isset($dokan_enable_selling) && $dokan_enable_selling == false){
-            update_user_meta($user_id,'dokan_enable_selling',$dokan_enable_selling);
-        }
-		
-		if (isset($params["fcm_token"])) {
-			update_user_meta($user->ID, 'fcm_token', $params["fcm_token"]);
-		}
-
-        $cookie = shopimint_generateCookieByUserId($user_id, $seconds);
-
-        return array(
-            "cookie" => $cookie,
-            "user_id" => $user_id,
-        );
-    }
 	
 	public function get_userallinfo_byid($request)
     {
 		 
         $userId = $_GET["userid"];
 		
-        $shipping = [];
+        $userinfo = [];
 		
-		$shipping["fcm_token"] = get_user_meta($userId, 'fcm_token', true);
-        $shipping["first_name"] = get_user_meta($userId, 'shipping_first_name', true);
-        $shipping["last_name"] = get_user_meta($userId, 'shipping_last_name', true);
-        $shipping["company"] = get_user_meta($userId, 'shipping_company', true);
-        $shipping["address_1"] = get_user_meta($userId, 'shipping_address_1', true);
-        $shipping["address_2"] = get_user_meta($userId, 'shipping_address_2', true);
-        $shipping["city"] = get_user_meta($userId, 'shipping_city', true);
-        $shipping["state"] = get_user_meta($userId, 'shipping_state', true);
-        $shipping["postcode"] = get_user_meta($userId, 'shipping_postcode', true);
-        $shipping["country"] = get_user_meta($userId, 'shipping_country', true);
-        $shipping["email"] = get_user_meta($userId, 'shipping_email', true);
-        $shipping["phone"] = get_user_meta($userId, 'shipping_phone', true);
+		$userinfo["fcm_token"] = get_user_meta($userId, 'fcm_token', true);
+        $userinfo["first_name"] = get_user_meta($userId, 'shipping_first_name', true);
+        $userinfo["last_name"] = get_user_meta($userId, 'shipping_last_name', true);
+        $userinfo["company"] = get_user_meta($userId, 'shipping_company', true);
+        $userinfo["address_1"] = get_user_meta($userId, 'shipping_address_1', true);
+        $userinfo["address_2"] = get_user_meta($userId, 'shipping_address_2', true);
+        $userinfo["city"] = get_user_meta($userId, 'shipping_city', true);
+        $userinfo["state"] = get_user_meta($userId, 'shipping_state', true);
+        $userinfo["postcode"] = get_user_meta($userId, 'shipping_postcode', true);
+        $userinfo["country"] = get_user_meta($userId, 'shipping_country', true);
+        $userinfo["email"] = get_user_meta($userId, 'shipping_email', true);
+        $userinfo["phone"] = get_user_meta($userId, 'shipping_phone', true);
 
-//         if (empty($shipping["first_name"]) && empty($shipping["last_name"]) && empty($shipping["company"]) && empty($shipping["address_1"]) && empty($shipping["address_2"]) && empty($shipping["city"]) && empty($shipping["state"]) && empty($shipping["postcode"]) && empty($shipping["country"]) && empty($shipping["email"]) && empty($shipping["phone"])) {
-//             return null;
-//         }
-        return $shipping;
+        return $userinfo;
     }
 
     private function get_shipping_address($userId)
@@ -808,109 +546,6 @@ class ShopimintUserController extends ShopimintBaseController
         }
     }
 
-    public function sms_login($request)
-    {
-        $access_token = $request["access_token"];
-        
-        $fcmtoken = '';
-        if (isset($request["fcm_token"])) {
-            $fcmtoken = $request["fcm_token"];
-		}
-
-        if (!isset($access_token)) {
-            return parent::sendError("invalid_login", "You must include a 'access_token' variable. Get the valid access_token for this app from Facebook API.", 400);
-        }
-        $url = 'https://graph.accountkit.com/v1.3/me/?access_token=' . $access_token;
-
-        $WP_Http_Curl = new WP_Http_Curl();
-        $result = $WP_Http_Curl->request($url, array(
-            'method' => 'GET',
-            'timeout' => 5,
-            'redirection' => 5,
-            'httpversion' => '1.0',
-            'blocking' => true,
-            'headers' => array(),
-            'body' => null,
-            'cookies' => array(),
-        ));
-
-        $result = json_decode($result, true);
-
-        if (isset($result["phone"])) {
-            $user_name = $result["phone"]["number"];
-            $user_email = $result["phone"]["number"] . "@shopimint.io";
-            return $this->createSocialAccount($user_email, $user_name, $user_name, "", $user_name, "", $fcmtoken);
-        } else {
-            return parent::sendError("invalid_login", "Your 'access_token' did not return email of the user. Without 'email' user can't be logged in or registered. Get user email extended permission while joining the Facebook app.", 400);
-        }
-        return $response;
-
-    }
-
-    public function firebase_sms_login($request)
-    {
-        $phone = $request["phone"];
-
-        $fcmtoken = '';
-        if (isset($request["fcm_token"])) {
-            $fcmtoken = $request["fcm_token"];
-		}
-        
-        if (!isset($phone)) {
-            return parent::sendError("invalid_login", "You must include a 'phone' variable.", 400);
-        }
-        $domain = $_SERVER['SERVER_NAME'];
-        if (count(explode(".", $domain)) == 1) {
-            $domain = "shopimint.io";
-        }
-        $user_name = $phone;
-        $user_email = $phone . "@" . $domain;
-        return $this->createSocialAccount($user_email, $user_name, $user_name, "", $user_name, "", $fcmtoken);
-    }
-
-    public function firebase_sms_login_v2($request)
-    {
-        $phone = $request["phone"];
-        if (!isset($phone)) {
-            return parent::sendError("invalid_login", "You must include a 'phone' variable.", 400);
-        }
-
-        if (isset($phone)) {
-            $args = array('meta_key' => 'registered_phone_number', 'meta_value' => $phone);
-            $search_users = get_users($args);
-            if (empty($search_users)) {
-                $domain = $_SERVER['SERVER_NAME'];
-                if (count(explode(".", $domain)) == 1) {
-                    $domain = "shopimint.io";
-                }
-                $user_name = $phone;
-                $user_email = $phone . "@" . $domain;
-                $user = get_user_by('email', $user_email);
-                if (!$user) {
-                    return parent::sendError("invalid_login", "User does not exist", 400);
-                }
-                $cookie = shopimint_generateCookieByUserId($user->ID);
-                $response['wp_user_id'] = $user->ID;
-                $response['cookie'] = $cookie;
-                $response['user_login'] = $user->user_login;
-                $response['user'] = $this->getResponseUserInfo($user);
-                return $response;
-            }
-            if (count($search_users) > 1) {
-                return parent::sendError("invalid_login", "Too many users with the same phone number", 400);
-            }
-            $user = $search_users[0];
-            $cookie = shopimint_generateCookieByUserId($user->ID);
-            $response['wp_user_id'] = $user->ID;
-            $response['cookie'] = $cookie;
-            $response['user_login'] = $user->user_login;
-            $response['user'] = $this->getResponseUserInfo($user);
-            return $response;
-        }
-        return parent::sendError("invalid_login", "Unknown Error", 400);
-    }
-
-
     function jwtDecode($token)
     {
         $splitToken = explode(".", $token);
@@ -969,57 +604,6 @@ class ShopimintUserController extends ShopimintBaseController
         } else {
             return parent::sendError("invalid_login", "Your 'token' did not return email of the user. Without 'email' user can't be logged in or registered. Get user email extended permission while joining the Google app.", 400);
         }
-    }
-
-    /*
-     * Post commment function
-     */
-    public function post_comment($request)
-    {
-        $cookie = $request["cookie"];
-        if (!isset($cookie)) {
-            return parent::sendError("invalid_login", "You must include a 'cookie' var in your request. Use the `generate_auth_cookie` method.", 401);
-        }
-        $user_id = shopimint_validateCookieLogin($cookie);
-        if (is_wp_error($user_id)) {
-            return $user_id;
-        }
-        if (!$request["post_id"]) {
-            return parent::sendError("invalid_data", "No post specified. Include 'post_id' var in your request.", 400);
-        } elseif (!$request["content"]) {
-            return parent::sendError("invalid_data", "Please include 'content' var in your request.", 400);
-        }
-
-        $comment_approved = 0;
-        $user_info = get_userdata($user_id);
-        $time = current_time('mysql');
-        $agent = filter_has_var(INPUT_SERVER, 'HTTP_USER_AGENT') ? filter_input(INPUT_SERVER, 'HTTP_USER_AGENT') : 'Mozilla';
-        $ips = filter_has_var(INPUT_SERVER, 'REMOTE_ADDR') ? filter_input(INPUT_SERVER, 'REMOTE_ADDR') : '127.0.0.1';
-        $data = array(
-            'comment_post_ID' => $request["post_id"],
-            'comment_author' => $user_info->user_login,
-            'comment_author_email' => $user_info->user_email,
-            'comment_author_url' => $user_info->user_url,
-            'comment_content' => $request["content"],
-            'comment_type' => '',
-            'comment_parent' => 0,
-            'user_id' => $user_info->ID,
-            'comment_author_IP' => $ips,
-            'comment_agent' => $agent,
-            'comment_date' => $time,
-            'comment_approved' => $comment_approved,
-        );
-        //print_r($data);
-        $comment_id = wp_insert_comment($data);
-        //add metafields
-        $meta = json_decode(stripcslashes($request["meta"]), true);
-        //extra function
-        add_comment_meta($comment_id, 'rating', $meta['rating']);
-        add_comment_meta($comment_id, 'verified', 0);
-
-        return array(
-            "comment_id" => $comment_id,
-        );
     }
 
     public function get_currentuserinfo($request)
@@ -1259,31 +843,6 @@ class ShopimintUserController extends ShopimintBaseController
         return $this->getResponseUserInfo($user);
     }
 
-    function prepare_checkout()
-    {
-        global $json_api;
-        $json = file_get_contents('php://input');
-        $params = json_decode($json);
-        $order = $params->order;
-        if (!isset($order)) {
-            return parent::sendError("invalid_checkout", "You must include a 'order' var in your request", 400);
-        }
-        global $wpdb;
-        $table_name = $wpdb->prefix . "shopimint_checkout";
-
-        $code = md5(mt_rand() . strtotime("now"));
-        $success = $wpdb->insert($table_name, array(
-                'code' => $code,
-                'order' => $order
-            )
-        );
-        if ($success) {
-            return $code;
-        } else {
-            return parent::sendError("error_insert_database", "Can't insert to database", 400);
-        }
-    }
-
     public function get_currency_rates()
     {
         global $woocommerce_wpml;
@@ -1322,197 +881,15 @@ class ShopimintUserController extends ShopimintBaseController
         }
     }
 
-    function chat_notification()
+    function custom_delete_item_permissions_check($request)
     {
-        $json = file_get_contents('php://input');
-        $params = json_decode($json, TRUE);
-        $token = $params['token'];
-        if (isset($token)) {
-            $cookie = urldecode(base64_decode($token));
-        } else {
-            return parent::sendError("unauthorized", "You are not allowed to do this", 401);
-        }
-        $user_id = shopimint_validateCookieLogin($cookie);
-        if (is_wp_error($user_id)) {
-            return $user_id;
-        }
-        $receiver_email = $params['receiver'];
-        $sender_name = $params['sender'];
-        if (is_email($sender_name)) {
-            $sender = get_user_by('email', $sender_name);
-            $sender_name = $sender->display_name;
-        }
-        $receiver = get_user_by('email', $receiver_email);
-
-        if (!$receiver) {
-            return parent::sendError("invalid_user", "User does not exist in this world. Please re-check user's existence with the Creator :)", 401);
-        }
-
-        $message = $params['message'];
-
-        $deviceToken = get_user_meta($receiver->ID, 'shopimint_device_token', true);
-        $manager_device_token = get_user_meta($receiver->ID, 'shopimint_manager_device_token', true);
-        // pushNotification($sender_name, $message, $deviceToken);
-        // pushNotification($sender_name, $message, $manager_device_token);
-    }
-
-    function shopimint_digrest_set_variables()
-    {
-        $json = file_get_contents('php://input');
-        $params = json_decode($json, TRUE);
-
-        $_POST['digits'] = 1;
-        $_REQUEST['login'] = 2;
-
-        if (isset($params['mobile'])) {
-            $_POST['digits_reg_mail'] = $params['mobile'];
-        }
-        if (isset($params['email'])) {
-            $_POST['dig_reg_mail'] = $params['email'];
-        }
-        if (isset($params['username'])) {
-            $_POST['digits_reg_username'] = $params['username'];
-        }
-        if (isset($params['country_code'])) {
-            $_POST['digregcode'] = $params['country_code'];
-        }
-        if (isset($params['otp'])) {
-            $_POST['dig_otp'] = $params['otp'];
-        }
-        $_POST['ftoken'] = $params['ftoken'];
-        $_REQUEST['ftoken'] = $params['ftoken'];
-
-        $_REQUEST['csrf'] = wp_create_nonce('crsf-otp');
-        $_POST['csrf'] = wp_create_nonce('crsf-otp');
-
-        $_POST['dig_nounce'] = wp_create_nonce('dig_form');
-        $_POST['crsf-otp'] = wp_create_nonce('crsf-otp');
-
-        $_REQUEST['json'] = 1;
-    }
-
-    function digits_register_check()
-    {
-        if(!function_exists('digits_create_user')) { 
-            return parent::sendError("plugin_not_found", "Please install  the  DIGITS: Wordpress Mobile Number Signup and Login  plugin", 400);
-        }
-
-        $json = file_get_contents('php://input');
-        $params = json_decode($json, TRUE);
-
-        if(empty($params['email'])){
-            return parent::sendError("invalid_email", 'Email is required', 400);
-        }
-        if (!empty($params['email']) && email_exists($params['email'])) {
-            return parent::sendError("invalid_email", 'Email already in use!', 400);
-        }
-
-        if(empty($params['username'])){
-            return parent::sendError("invalid_username", 'Username is required', 400);
-        }
-        if (!empty($params['username']) && username_exists($params['username'])) {
-            return parent::sendError("invalid_username", 'Username already in use!', 400);
-        }
-
-        if(empty($params['country_code'])){
-            return parent::sendError("invalid_country_code", 'Country code is required', 400);
-        }
-
-        if(empty($params['mobile'])){
-            return parent::sendError("invalid_mobile", 'Mobile is required', 400);
-        }
-
-        $mob = $params['country_code'].$params['mobile'];
-        $mobuser = getUserFromPhone($mob);
-        if ($mobuser != null  || username_exists($mob)) {
-            return parent::sendError("invalid_mobile", 'Mobile Number already in use!', 400);
-        } 
-
-        return  true;
-    }
-
-    function digits_register()
-    {
-        if(!function_exists('digits_create_user')) { 
-            return parent::sendError("plugin_not_found", "Please install  the  DIGITS: Wordpress Mobile Number Signup and Login  plugin", 400);
-        }
-
-        $this->shopimint_digrest_set_variables();
-        
-        $data = digits_create_user();
-        if ($data['success'] === false) {
-            return parent::sendError("invalid_data", explode("<br />",  $data['data']['msg'])[0], 400);
-        } else {
-            $user_id = $data['data']['user_id'];
-            $cookie = shopimint_generateCookieByUserId($user_id);
-            $user = get_userdata($user_id);
-
-            $response['wp_user_id'] = $user_id;
-            $response['cookie'] = $cookie;
-            $response['user_login'] = $user->user_login;
-            $response['user'] = $this->getResponseUserInfo($user);
-            return $response;
-        }
-    }
-
-    function digits_login_check()
-    {
-        if(!function_exists('digits_create_user')) { 
-            return parent::sendError("plugin_not_found", "Please install  the  DIGITS: Wordpress Mobile Number Signup and Login  plugin", 400);
-        }
-
-        $json = file_get_contents('php://input');
-        $params = json_decode($json, TRUE);
-
-        if(empty($params['country_code'])){
-            return parent::sendError("invalid_country_code", 'Country code is required', 400);
-        }
-
-        if(empty($params['mobile'])){
-            return parent::sendError("invalid_mobile", 'Mobile is required', 400);
-        }
-
-        $mob = $params['country_code'].$params['mobile'];
-        $mobuser = getUserFromPhone($mob);
-        if ($mobuser == null) {
-            return parent::sendError("invalid_mobile", 'Phone number is not registered!', 400);
-        } 
-
-        return  true;
-    }
-
-    function digits_login()
-    {
-        if(!function_exists('dig_validateMobileNumber')) { 
-            return parent::sendError("plugin_not_found", "Please install  the  DIGITS: Wordpress Mobile Number Signup and Login  plugin", 400);
-        }
-
-        $this->shopimint_digrest_set_variables();
-    
-        $otp = $_POST['dig_otp'];
-        $validateMob = dig_validateMobileNumber($_POST['digregcode'], $_POST['digits_reg_mail'], $otp, null, 1, null, false);
-    
-        if ($validateMob['success'] === false) {
-            return parent::sendError("invalid_data",$validateMob['msg'], 400);
-        }
-    
-        $user = getUserFromPhone($validateMob['countrycode'] . $validateMob['mobile']);
-        $cookie = shopimint_generateCookieByUserId($user->ID);
-        $response['wp_user_id'] = $user->ID;
-        $response['cookie'] = $cookie;
-        $response['user_login'] = $user->user_login;
-        $response['user'] = $this->getResponseUserInfo($user);
-        return $response;
-    }
-
-    function custom_delete_item_permissions_check($request) {
-		
         $cookie = $request->get_header("User-Cookie");
-        if (isset($cookie) && $cookie != null && parent::checkApiPermission()) {
+        if (isset($cookie) && $cookie != null) {
             $user_id = shopimint_validateCookieLogin($cookie);
             if (is_wp_error($user_id)) {
                 return false;
             }
+            $request['force'] = true;
             $request["id"] = $user_id;
             return true;
         } else {

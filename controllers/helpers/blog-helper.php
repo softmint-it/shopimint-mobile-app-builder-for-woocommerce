@@ -5,7 +5,7 @@ class ShopimintBlogHelper
     public function get_blog_from_dynamic_link($request)
     {
         if (isset($request['url'])) {
-            $url = $request['url'];
+            $url = sanitize_url($request['url']);
             $product_id = url_to_postid($url);
             if ($product_id) {
                 $post = get_post($product_id);

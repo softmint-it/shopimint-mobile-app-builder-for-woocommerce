@@ -1,12 +1,15 @@
 <?php
 
 /**
- * Plugin Name: Shopimint - Mobile App Builder For Woocommerce
- * Plugin URI: https://github.com/softmint-it/shopimint-mobile-app-builder-for-woocommerce
- * Description: Turn your woocommerce website into a fully functional elegant mobile app without any coding skills using shopimint drag and drop mobile app builder.
- * Author: softmint-it
- * Author URI: https://shopimint.com
- * Text Domain: shopimint-mobile-app-builder-for-woocommerce
+ * Plugin Name:     Shopimint - Mobile App Builder For Woocommerce
+ * Plugin URI :     https://github.com/softmint-it/shopimint-mobile-app-builder-for-woocommerce
+ * Version:         1.0.0
+ * Requires PHP:    7.0
+ * Requires at least: 4.6
+ * Description:     Turn your woocommerce website into a fully functional elegant mobile app without any coding skills using shopimint drag and drop mobile app builder.
+ * Author:          Shopimint
+ * Author URI:      https://shopimint.com
+ * Text Domain:     shopimint-mobile-app-builder-for-woocommerce
  */
 
 defined('ABSPATH') or wp_die('No script kiddies please!');
@@ -14,7 +17,6 @@ defined('ABSPATH') or wp_die('No script kiddies please!');
 include plugin_dir_path(__FILE__) . "templates/class-mobile-detect.php";
 include plugin_dir_path(__FILE__) . "templates/class-rename-generate.php";
 include_once plugin_dir_path(__FILE__) . "controllers/shopimint-user.php";
-include_once plugin_dir_path(__FILE__) . "controllers/shopimint-home.php";
 include_once plugin_dir_path(__FILE__) . "controllers/shopimint-woo.php";
 include_once plugin_dir_path(__FILE__) . "functions/index.php";
 include_once plugin_dir_path(__FILE__) . "functions/utils.php";
@@ -31,12 +33,6 @@ class ShopimintCheckOut
         include_once(ABSPATH . 'wp-admin/includes/plugin.php');
         if (is_plugin_active('woocommerce/woocommerce.php') == false) {
             return 0;
-        }
-
-        add_action('woocommerce_init', 'woocommerce_shopimint_init');
-        function woocommerce_shopimint_init() {
-            include_once plugin_dir_path(__FILE__) . "controllers/shopimint-order.php";
-            include_once plugin_dir_path(__FILE__) . "controllers/shopimint-customer.php";
         }
 
         register_activation_hook(__FILE__, array($this, 'notify_app_builder'));

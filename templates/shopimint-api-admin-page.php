@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="profile" href="http://gmpg.org/xfn/11">
     <?php wp_head(); ?>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="<?php echo plugin_dir_url( dirname( __FILE__ ) ) . 'assets/css/boostrap.min.css'; ?>" >
     
     <style>
       .bd-placeholder-img {
@@ -76,7 +76,7 @@
     <header class="pb-3 mb-4 border-bottom">
         <div class="row">
             <div class="col-4">
-                <img src="https://app.shopimint.com/backend/static/logo.png" style="width:200px; max-width:90%;" />
+                <img src="<?php echo plugin_dir_url( dirname( __FILE__ ) ) . 'assets/img/logo.png'; ?>" style="width:200px; max-width:90%;" />
             </div>
             <div class="col-8">
                 <div style="float:right; margin-left:50px;">
@@ -157,7 +157,7 @@
                 </a>
             </div>
             <div class="col-md-6">
-                <img src="https://app.shopimint.com/backend/static/app-builder.webp" style="width:100%" />
+                <img src="<?php echo plugin_dir_url( dirname( __FILE__ ) ) . 'assets/img/app-builder.webp'; ?>" style="width:100%" />
             </div>
         </div>
         
